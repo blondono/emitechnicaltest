@@ -5,7 +5,7 @@ using Emi.Employees.Domain.Shared;
 using ErrorOr;
 using MediatR;
 
-namespace Emi.Employees.Application.Modules.GetEmployees
+namespace Emi.Employees.Application.Modules.Employees.GetEmployees
 {
     internal class GetEmployeesHandler(
         IRepository<Employee> repository,
@@ -14,10 +14,10 @@ namespace Emi.Employees.Application.Modules.GetEmployees
         : IRequestHandler<GetEmployeesCommand, ErrorOr<List<EmployeeResponse>>>
     {
         public async Task<ErrorOr<List<EmployeeResponse>>> Handle(GetEmployeesCommand request, CancellationToken cancellationToken)
-        => 
+        =>
             mapper.Map<List<EmployeeResponse>>(
                 await repository.GetAllAsync(
-                    x => x.Id == (request.EmployeeId.HasValue ? request.EmployeeId.Value : x.Id), 
+                    x => x.Id == (request.EmployeeId.HasValue ? request.EmployeeId.Value : x.Id),
                     cancellationToken)
                 );
     }

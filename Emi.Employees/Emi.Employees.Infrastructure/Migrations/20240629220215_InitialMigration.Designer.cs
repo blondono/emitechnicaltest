@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emi.Employees.Infrastructure.Migrations
 {
     [DbContext(typeof(EmployeeDbContext))]
-    [Migration("20240629212527_InitialMigration")]
+    [Migration("20240629220215_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -53,7 +53,8 @@ namespace Emi.Employees.Infrastructure.Migrations
 
                     b.Property<string>("CurrentPosition")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");

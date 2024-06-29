@@ -3,7 +3,7 @@ using Emi.Employees.Application.Common;
 using ErrorOr;
 using MediatR;
 
-namespace Emi.Employees.Application.Modules.ManageEmployees;
+namespace Emi.Employees.Application.Modules.Employees.ManageEmployees;
 
 public class ManageEmployeesCommand : IRequest<ErrorOr<Success>>
 {

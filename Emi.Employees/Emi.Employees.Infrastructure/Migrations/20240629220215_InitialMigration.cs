@@ -52,7 +52,7 @@ namespace Emi.Employees.Infrastructure.Migrations
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CurrentPosition = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CurrentPosition = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>

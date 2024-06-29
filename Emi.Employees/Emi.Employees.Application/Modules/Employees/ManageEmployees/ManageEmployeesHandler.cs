@@ -4,7 +4,7 @@ using Emi.Employees.Domain.Shared;
 using ErrorOr;
 using MediatR;
 
-namespace Emi.Employees.Application.Modules.ManageEmployees
+namespace Emi.Employees.Application.Modules.Employees.ManageEmployees
 {
     internal class ManageEmployeesHandler(
         IRepository<Employee> repository,

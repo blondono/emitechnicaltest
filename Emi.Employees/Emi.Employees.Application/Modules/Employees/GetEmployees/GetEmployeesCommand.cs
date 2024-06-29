@@ -2,7 +2,7 @@
 using ErrorOr;
 using MediatR;
 
-namespace Emi.Employees.Application.Modules.GetEmployees;
+namespace Emi.Employees.Application.Modules.Employees.GetEmployees;
 
 public class GetEmployeesCommand : IRequest<ErrorOr<List<EmployeeResponse>>>
 {

@@ -50,7 +50,8 @@ namespace Emi.Employees.Infrastructure.Migrations
 
                     b.Property<string>("CurrentPosition")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");

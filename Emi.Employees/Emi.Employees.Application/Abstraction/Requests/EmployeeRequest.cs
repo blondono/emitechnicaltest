@@ -1,4 +1,6 @@
 ﻿using System.Text.Json.Serialization;
+using Emi.Employees.Application.Common;
+using Emi.Employees.Domain.ValueObjects;
 
 namespace Emi.Employees.Application.Abstraction.Request;
 
@@ -8,7 +10,7 @@ public class EmployeeRequest
     public required string Name { get; set; }
 
     [JsonPropertyName("position")]
-    public required string Position { get; set; }
+    public required EnumPosition Position { get; set; }
 
     [JsonPropertyName("salary")]
     public required decimal Salary { get; set; }

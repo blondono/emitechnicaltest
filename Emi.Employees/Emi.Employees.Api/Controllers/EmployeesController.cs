@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using Emi.Employees.Application.Abstraction.Request;
 using Emi.Employees.Application.Common;
-using Emi.Employees.Application.Modules.GetEmployees;
-using Emi.Employees.Application.Modules.ManageEmployees;
+using Emi.Employees.Application.Modules.Employees.GetEmployees;
+using Emi.Employees.Application.Modules.Employees.ManageEmployees;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +14,23 @@ namespace Emi.Employees.App.Controllers
         ISender sender
         ) : ControllerBase
     {
-        [HttpGet("{id}")]
-        public async Task<IResult> Get(int? id, CancellationToken cancellationToken)
+
+        [HttpGet]
+        public async Task<IResult> GetAll(CancellationToken cancellationToken = default)
         {
             var result = await sender.Send(
                 new GetEmployeesCommand
-                { 
+                {
+                    EmployeeId = null
+                }, cancellationToken);
+            return result.Match(Results.Ok, _ => Results.BadRequest(result.Errors));
+        }
+        [HttpGet("{id}")]
+        public async Task<IResult> GetById(int? id = null, CancellationToken cancellationToken = default)
+        {
+            var result = await sender.Send(
+                new GetEmployeesCommand
+                {
                     EmployeeId = id
                 }, cancellationToken);
             return result.Match(Results.Ok, _ => Results.BadRequest(result.Errors));

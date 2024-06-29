@@ -1,4 +1,5 @@
 ﻿using Emi.Employees.Domain.Entities;
+using Emi.Employees.Domain.ValueObjects;
 using Emi.Employees.Infrastructure.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,6 +19,13 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(t => t.DepartmentId).IsRequired();
         builder.Property(t => t.ProjectId).IsRequired();
         builder.Property(t => t.Salary).IsRequired();
+
+        builder.Property(t => t.CurrentPosition)
+            .HasMaxLength(50)
+            .IsRequired()
+            .HasConversion(
+                state => state.Name,
+                s => EmployeePosition.FromName(s, true));
 
         builder.HasOne(e => e.Department).WithMany(e => e.Employees)
             .HasForeignKey(b => b.DepartmentId)
