@@ -9,3 +9,4 @@ C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Domain\obj\Debug\net8.0\Emi.Em
 C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Domain\obj\Debug\net8.0\refint\Emi.Employees.Domain.dll
 C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Domain\obj\Debug\net8.0\Emi.Employees.Domain.pdb
 C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Domain\obj\Debug\net8.0\ref\Emi.Employees.Domain.dll
+C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Domain\obj\Debug\net8.0\Emi.Employees.Domain.sourcelink.json

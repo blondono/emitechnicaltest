@@ -2,6 +2,7 @@
 {
     public class PositionHistory
     {
+        public int Id { get; set; }
         public int EmployeeId { get; set; }
         public int DepartmentId { get; set; }
         public int ProjectId { get; set; }

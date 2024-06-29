@@ -1,10 +1,13 @@
-﻿namespace Emi.Employees.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace Emi.Employees.Domain.Entities
 {
     public class Employee
     {
         public int Id { get; set; }
-        public int CurrentDepartmentId { get; set; }
-        public int CurrentProjectId { get; set; }
+        public int DepartmentId { get; set; }
+        public int ProjectId { get; set; }
         public string Name { get; set; }
         public string CurrentPosition { get; set; }
         public decimal Salary { get; set; }

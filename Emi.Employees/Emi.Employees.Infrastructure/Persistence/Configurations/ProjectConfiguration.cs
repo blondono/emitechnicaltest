@@ -15,11 +15,5 @@ internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.Property(p => p.Name).IsRequired();
 
-        builder.HasMany<Employee>("Project").WithOne().HasForeignKey(b => b.CurrentProjectId)
-            .HasConstraintName("FK_Employee_ProjectId");
-
-        builder.HasMany<PositionHistory>("Project").WithOne().HasForeignKey(b => b.ProjectId)
-            .HasConstraintName("FK_PositionHistory_ProjectId");
-
     }
 }

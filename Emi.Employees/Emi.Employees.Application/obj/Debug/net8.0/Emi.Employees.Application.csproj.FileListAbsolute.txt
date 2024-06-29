@@ -13,3 +13,4 @@ C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Application\bin\Debug\net8.0\E
 C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Application\bin\Debug\net8.0\Emi.Employees.Domain.pdb
 C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Application\obj\Debug\net8.0\Emi.Employees.Application.csproj.AssemblyReference.cache
 C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Application\obj\Debug\net8.0\Emi.Empl.87B6BA9C.Up2Date
+C:\Personal\repos\emi\Emi.Employees\Emi.Employees.Application\obj\Debug\net8.0\Emi.Employees.Application.sourcelink.json

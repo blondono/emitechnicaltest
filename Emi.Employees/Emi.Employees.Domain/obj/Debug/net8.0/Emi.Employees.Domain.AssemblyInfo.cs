@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Emi.Employees.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2db4d0d95a286db29b74587ecfad6f818c28600")]
 [assembly: System.Reflection.AssemblyProductAttribute("Emi.Employees.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Emi.Employees.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -15,11 +15,6 @@ internal class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 
         builder.Property(p => p.Name).IsRequired();
 
-        builder.HasMany<Employee>("Department").WithOne().HasForeignKey(b => b.CurrentDepartmentId)
-            .HasConstraintName("FK_Employee_DepartmentId");
-
-        builder.HasMany<PositionHistory>("Department").WithOne().HasForeignKey(b => b.DepartmentId)
-            .HasConstraintName("FK_PositionHistory_DepartmentId");
 
     }
 }

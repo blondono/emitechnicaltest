@@ -15,12 +15,16 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
         builder.Property(t => t.Name).IsRequired();
         builder.Property(t => t.CurrentPosition).IsRequired();
-        builder.Property(t => t.CurrentDepartmentId).IsRequired();
+        builder.Property(t => t.DepartmentId).IsRequired();
+        builder.Property(t => t.ProjectId).IsRequired();
         builder.Property(t => t.Salary).IsRequired();
 
-        builder.HasMany<PositionHistory>("Employees").WithOne().HasForeignKey(b => b.EmployeeId)
-            .HasConstraintName("FK_PositionHistory_EmployeeId");
+        builder.HasOne(e => e.Department).WithMany(e => e.Employees)
+            .HasForeignKey(b => b.DepartmentId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(a => a.PositionHistories).WithOne(a => a.Employee).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(e => e.Project).WithMany(e => e.Employees)
+            .HasForeignKey(b => b.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

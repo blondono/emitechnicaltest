@@ -11,7 +11,7 @@ public sealed class EmployeeDbContext : DbContext
     public DbSet<Project> Projects { get; set; }
     public DbSet<PositionHistory> PositionHistories { get; set; }
 
-    public EmployeeDbContext(DbContextOptions<EmployeeDbContext> 
+    public EmployeeDbContext(DbContextOptions<EmployeeDbContext>
         options)
         : base(options) { }
 
@@ -20,7 +20,5 @@ public sealed class EmployeeDbContext : DbContext
         modelBuilder.HasDefaultSchema(Schemas.Employees);
 
         modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
-
-        base.OnModelCreating(modelBuilder);
     }
 }
