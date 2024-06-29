@@ -1,0 +1,6 @@
+@Emi.Employees.Api_HostAddress = http://localhost:5022
+
+GET {{Emi.Employees.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
