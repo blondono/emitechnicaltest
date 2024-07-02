@@ -1,3 +1,4 @@
+using Emi.Employees.App;
 using Emi.Employees.Application;
 using Emi.Employees.Infrastructure;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +35,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.InstallApplication(configuration);
 builder.Services.InstallInfrastructure(configuration);
 
+builder.Services.AddJwtAuthentication();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -51,6 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();

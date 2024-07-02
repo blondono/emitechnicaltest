@@ -1,10 +1,12 @@
 ﻿using Emi.Employees.Domain.Entities;
 using Emi.Employees.Infrastructure.Constants;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Emi.Employees.Infrastructure.Persistence;
 
-public sealed class EmployeeDbContext : DbContext
+public sealed class EmployeeDbContext : IdentityDbContext<IdentityUser>
 {
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Department> Departments { get; set; }

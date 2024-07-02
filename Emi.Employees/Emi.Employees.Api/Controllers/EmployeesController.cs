@@ -4,18 +4,21 @@ using Emi.Employees.Application.Common;
 using Emi.Employees.Application.Modules.Employees.GetEmployees;
 using Emi.Employees.Application.Modules.Employees.ManageEmployees;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emi.Employees.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EmployeesController(
         ISender sender
         ) : ControllerBase
     {
 
         [HttpGet]
+        [Authorize(Roles = "Manager,User")]
         public async Task<IResult> GetAll(CancellationToken cancellationToken = default)
         {
             var result = await sender.Send(
@@ -26,6 +29,7 @@ namespace Emi.Employees.App.Controllers
             return result.Match(Results.Ok, _ => Results.BadRequest(result.Errors));
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IResult> GetById(int? id = null, CancellationToken cancellationToken = default)
         {
             var result = await sender.Send(
@@ -37,6 +41,7 @@ namespace Emi.Employees.App.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<IResult> Insert([FromBody] EmployeeRequest employeeRequest, CancellationToken cancellationToken)
         {
             var result = await sender.Send(
@@ -49,6 +54,7 @@ namespace Emi.Employees.App.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IResult> Update(int id, [FromBody] EmployeeRequest employeeRequest, CancellationToken cancellationToken)
         {
             var result = await sender.Send(
@@ -62,6 +68,7 @@ namespace Emi.Employees.App.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IResult> Delete(int id, CancellationToken cancellationToken)
         {
             var result = await sender.Send(
