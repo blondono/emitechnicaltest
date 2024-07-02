@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Emi.Employees.Application.Abstraction.Requests;
+using Emi.Employees.Domain.Entities;
 
 namespace Emi.Employees.App.Controllers;
 
@@ -12,13 +13,18 @@ namespace Emi.Employees.App.Controllers;
 [Route("api/[controller]")]
 public class LoginController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<Employee> _employeeManager;
+    private readonly RoleManager<Position> _positionManager;
+    private readonly SignInManager<Employee> _signInManager;
     private readonly IConfiguration _configuration;
 
-    public LoginController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+    public LoginController(UserManager<Employee> employeeManager, 
+        SignInManager<Employee> signInManager,
+        RoleManager<Position> positionManager,
+        IConfiguration configuration)
     {
-        _userManager = userManager;
+        _employeeManager = employeeManager;
+        _positionManager = positionManager;
         _signInManager = signInManager;
         _configuration = configuration;
     }
@@ -26,21 +32,17 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
-        var user = await _userManager.FindByNameAsync(model.Username);
-        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+        var employee = await _employeeManager.FindByNameAsync(model.Username);
+        if (employee != null && await _employeeManager.CheckPasswordAsync(employee, model.Password))
         {
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var position = await _positionManager.FindByIdAsync(employee.PositionId.ToString());
 
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, employee.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
+            authClaims.Add(new Claim(ClaimTypes.Role, position.Name));
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
