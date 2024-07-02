@@ -1,21 +1,21 @@
 ﻿using System.Text;
+using Emi.Employees.Domain.Entities;
 using Emi.Employees.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Emi.Employees.App
 {
     public static class ServiceExtensions
     {
-        public static void AddJwtAuthentication(this IServiceCollection services)
+        public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var key = Encoding.ASCII.GetBytes("your_secret_key_here");
-
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<Employee, Position>()
             .AddEntityFrameworkStores<EmployeeDbContext>()
             .AddDefaultTokenProviders();
+
+            var key = Encoding.ASCII.GetBytes(configuration.GetValue<string>("Jwt:Key"));
 
             services.AddAuthentication(options =>
             {
@@ -36,8 +36,8 @@ namespace Emi.Employees.App
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
-                options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+                options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
+                options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
             });
         }
     }

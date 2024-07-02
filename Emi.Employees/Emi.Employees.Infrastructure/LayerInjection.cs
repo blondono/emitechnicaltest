@@ -1,10 +1,13 @@
-﻿using Emi.Employees.Domain.Shared;
+﻿using Emi.Employees.Domain.Entities;
+using Emi.Employees.Domain.Shared;
 using Emi.Employees.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Identity.Client;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Emi.Employees.Infrastructure;
 
@@ -16,57 +19,93 @@ public static class LayerInjection
         services.AddDbContext<EmployeeDbContext>(options => options.UseSqlServer(connectionString));
         services.TryAddScoped(typeof(IRepository<>), typeof(EmployeeRepository<>));
     }
-    public static void MigrateDatabase(this IServiceProvider serviceProvider)
+    public static async Task MigrateDatabase(this IServiceProvider serviceProvider)
     {
-        using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-        using var context = serviceScope.ServiceProvider.GetService<EmployeeDbContext>();
-        context?.Database.Migrate();
-        var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
-        InitializeSecurityModel(serviceScope.ServiceProvider, userManager).Wait();
+        using (var scope = serviceProvider.CreateScope())
+        {
+            using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using var context = serviceScope.ServiceProvider.GetService<EmployeeDbContext>();
+
+            await LoadBusinessData(scope, context);
+            await LoadAuthenticationData(scope, context);
+        }
+    }
+    public static async Task LoadBusinessData(IServiceScope scope, EmployeeDbContext context)
+    {
+        var departments = context.Departments.ToList();
+        if (!departments.Any())
+        {
+            context.Departments.AddRange(new List<Department>()
+               {
+                   new() { Name = "Accounting"},
+                   new() { Name = "Administration"},
+                   new() { Name = "TI"},
+               });
+
+        }
+        var projects = context.Projects.ToList();
+        if (!projects.Any())
+        {
+            context.Projects.AddRange(new List<Project>()
+               {
+                   new() { Name = "R&D"},
+                   new() { Name = "AI"},
+                   new() { Name = "Payroll"},
+               });
+        }
+        await context.SaveChangesAsync();
     }
 
-    public static async Task InitializeSecurityModel(IServiceProvider serviceProvider, UserManager<IdentityUser> userManager)
+    public static async Task LoadAuthenticationData(IServiceScope scope, EmployeeDbContext context)
     {
-        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManagerService = scope.ServiceProvider.GetRequiredService<UserManager<Employee>>();
+        var positionManagerService = scope.ServiceProvider.GetRequiredService<RoleManager<Position>>();
 
-        string[] roleNames = { "Manager", "User" };
-        IdentityResult roleResult;
+        context?.Database.Migrate();
 
-        foreach (var roleName in roleNames)
+        string[] positions = new string[] { "Manager", "User" };
+        foreach (var position in positions)
         {
-            var roleExist = await roleManager.RoleExistsAsync(roleName);
-            if (!roleExist)
+            if (!context.Position.Any(r => r.Name == position))
             {
-                roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+                await positionManagerService.CreateAsync(new Position() { Name = position });
             }
         }
 
-        var manager = await userManager.FindByEmailAsync("admin@example.com");
-
+        string password = "Password123!";
+        var manager = await userManagerService.FindByEmailAsync("manager@company.com");
         if (manager == null)
         {
-            manager = new IdentityUser()
+            var position = await positionManagerService.FindByNameAsync("Manager");
+            manager = new Employee
             {
-                UserName = "admin@example.com",
-                Email = "admin@example.com",
+                UserName = "manager@company.com",
+                Email = "manager@company.com",
+                Name = "User Manager",
+                DepartmentId = 1, 
+                ProjectId = 1,
+                Salary = 200,
+                PositionId = position.Id
             };
-            await userManager.CreateAsync(manager, "Colombia123!");
-            await userManager.AddToRoleAsync(manager, "Manager");
+            await userManagerService.CreateAsync(manager, password);
         }
 
-        var user = await userManager.FindByEmailAsync("user@example.com");
-
+        var user = await userManagerService.FindByEmailAsync("user@company.com");
         if (user == null)
         {
-            user = new IdentityUser()
+            var position = await positionManagerService.FindByNameAsync("User");
+            user = new Employee
             {
-                UserName = "user@example.com",
-                Email = "user@example.com",
+                UserName = "user@company.com",
+                Email = "user@company.com",
+                Name = "Current User",
+                DepartmentId = 2,
+                ProjectId = 2,
+                Salary = 100,
+                PositionId = position.Id
             };
-            await userManager.CreateAsync(user, "Colombia111!");
-            await userManager.AddToRoleAsync(user, "User");
+            await userManagerService.CreateAsync(user, password);
         }
-
-
+        await context.SaveChangesAsync();
     }
 }

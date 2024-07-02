@@ -29,7 +29,7 @@ namespace Emi.Employees.App.Controllers
             return result.Match(Results.Ok, _ => Results.BadRequest(result.Errors));
         }
         [HttpGet("{id}")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager,User")]
         public async Task<IResult> GetById(int? id = null, CancellationToken cancellationToken = default)
         {
             var result = await sender.Send(

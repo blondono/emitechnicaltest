@@ -35,7 +35,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.InstallApplication(configuration);
 builder.Services.InstallInfrastructure(configuration);
 
-builder.Services.AddJwtAuthentication();
+builder.Services.AddJwtAuthentication(configuration);
 
 // Add services to the container.
 
@@ -58,5 +58,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();
-app.Services.MigrateDatabase();
+await app.Services.MigrateDatabase();
 app.Run();

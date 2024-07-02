@@ -16,7 +16,7 @@ internal class PositionHistoryConfiguration : IEntityTypeConfiguration<PositionH
         builder.Property(p => p.EmployeeId).IsRequired();
         builder.Property(p => p.DepartmentId).IsRequired();
         builder.Property(p => p.ProjectId).IsRequired();
-        builder.Property(p => p.Position).IsRequired();
+        builder.Property(p => p.PositionId).IsRequired();
         builder.Property(p => p.StartDate).IsRequired();
         builder.Property(p => p.EndDate).IsRequired();
 

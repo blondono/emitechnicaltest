@@ -15,17 +15,9 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.HasKey(t => t.Id);
 
         builder.Property(t => t.Name).IsRequired();
-        builder.Property(t => t.CurrentPosition).IsRequired();
         builder.Property(t => t.DepartmentId).IsRequired();
         builder.Property(t => t.ProjectId).IsRequired();
         builder.Property(t => t.Salary).IsRequired();
-
-        builder.Property(t => t.CurrentPosition)
-            .HasMaxLength(50)
-            .IsRequired()
-            .HasConversion(
-                state => state.Name,
-                s => EmployeePosition.FromName(s, true));
 
         builder.HasOne(e => e.Department).WithMany(e => e.Employees)
             .HasForeignKey(b => b.DepartmentId)
@@ -34,5 +26,10 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.HasOne(e => e.Project).WithMany(e => e.Employees)
             .HasForeignKey(b => b.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(e => e.Position)
+                  .WithMany()
+                  .HasForeignKey(e => e.PositionId)
+                  .IsRequired();
     }
 }

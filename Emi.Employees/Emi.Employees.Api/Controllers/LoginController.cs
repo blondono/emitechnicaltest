@@ -23,7 +23,7 @@ public class LoginController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpPost("login")]
+    [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
         var user = await _userManager.FindByNameAsync(model.Username);
