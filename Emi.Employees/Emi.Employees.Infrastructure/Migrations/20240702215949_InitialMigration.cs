@@ -112,7 +112,7 @@ namespace Emi.Employees.Infrastructure.Migrations
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -126,6 +126,11 @@ namespace Emi.Employees.Infrastructure.Migrations
                         name: "FK_PositionHistory_Employee_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employee",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PositionHistory_Position_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Position",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PositionHistory_Project_ProjectId",
@@ -177,6 +182,11 @@ namespace Emi.Employees.Infrastructure.Migrations
                 name: "IX_PositionHistory_EmployeeId",
                 table: "PositionHistory",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PositionHistory_PositionId",
+                table: "PositionHistory",
+                column: "PositionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PositionHistory_ProjectId",

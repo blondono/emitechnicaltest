@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Identity.Client;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Emi.Employees.Infrastructure;
 
@@ -25,6 +23,7 @@ public static class LayerInjection
         {
             using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using var context = serviceScope.ServiceProvider.GetService<EmployeeDbContext>();
+            context?.Database.Migrate();
 
             await LoadBusinessData(scope, context);
             await LoadAuthenticationData(scope, context);
@@ -61,8 +60,6 @@ public static class LayerInjection
         var userManagerService = scope.ServiceProvider.GetRequiredService<UserManager<Employee>>();
         var positionManagerService = scope.ServiceProvider.GetRequiredService<RoleManager<Position>>();
 
-        context?.Database.Migrate();
-
         string[] positions = new string[] { "Manager", "User" };
         foreach (var position in positions)
         {
@@ -82,7 +79,7 @@ public static class LayerInjection
                 UserName = "manager@company.com",
                 Email = "manager@company.com",
                 Name = "User Manager",
-                DepartmentId = 1, 
+                DepartmentId = 1,
                 ProjectId = 1,
                 Salary = 200,
                 PositionId = position.Id
@@ -107,5 +104,16 @@ public static class LayerInjection
             await userManagerService.CreateAsync(user, password);
         }
         await context.SaveChangesAsync();
+
+        var history = context.PositionHistories.ToList();
+        if (!history.Any())
+        {
+            context.PositionHistories.AddRange(new List<PositionHistory>()
+            {
+                new() { DepartmentId = 1, EmployeeId = 1, PositionId = 1, ProjectId = 1, StartDate = DateTime.UtcNow },
+                new() { DepartmentId = 2, EmployeeId = 2, PositionId = 2, ProjectId = 2, StartDate = DateTime.UtcNow },
+            });
+            await context.SaveChangesAsync();
+        }
     }
 }

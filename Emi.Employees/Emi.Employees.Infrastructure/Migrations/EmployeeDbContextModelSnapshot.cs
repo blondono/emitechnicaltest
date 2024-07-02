@@ -175,7 +175,6 @@ namespace Emi.Employees.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("EndDate")
-                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PositionId")
@@ -192,6 +191,8 @@ namespace Emi.Employees.Infrastructure.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("PositionId");
 
                     b.HasIndex("ProjectId");
 
@@ -256,6 +257,12 @@ namespace Emi.Employees.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Emi.Employees.Domain.Entities.Position", "Position")
+                        .WithMany("PositionHistories")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Emi.Employees.Domain.Entities.Project", "Project")
                         .WithMany("PositionHistories")
                         .HasForeignKey("ProjectId")
@@ -265,6 +272,8 @@ namespace Emi.Employees.Infrastructure.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("Position");
 
                     b.Navigation("Project");
                 });
@@ -277,6 +286,11 @@ namespace Emi.Employees.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Emi.Employees.Domain.Entities.Employee", b =>
+                {
+                    b.Navigation("PositionHistories");
+                });
+
+            modelBuilder.Entity("Emi.Employees.Domain.Entities.Position", b =>
                 {
                     b.Navigation("PositionHistories");
                 });

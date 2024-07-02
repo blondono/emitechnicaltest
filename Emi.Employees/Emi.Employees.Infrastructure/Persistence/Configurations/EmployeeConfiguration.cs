@@ -17,6 +17,7 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(t => t.Name).IsRequired();
         builder.Property(t => t.DepartmentId).IsRequired();
         builder.Property(t => t.ProjectId).IsRequired();
+        builder.Property(t => t.PositionId).IsRequired();
         builder.Property(t => t.Salary).IsRequired();
 
         builder.HasOne(e => e.Department).WithMany(e => e.Employees)

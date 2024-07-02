@@ -3,6 +3,7 @@ using Emi.Employees.Application.Abstraction.Request;
 using Emi.Employees.Application.Common;
 using Emi.Employees.Application.Modules.Employees.GetEmployees;
 using Emi.Employees.Application.Modules.Employees.ManageEmployees;
+using Emi.Employees.Application.Modules.PositionHistory.GetPositionHistory;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace Emi.Employees.App.Controllers
                 {
                     EmployeeId = null
                 }, cancellationToken);
-            return result.Match(Results.Ok, _ => Results.BadRequest(result.Errors));
+            return result.Match(result.Value.Any() ? Results.Ok : Results.NotFound, _ => Results.BadRequest(result.Errors));
         }
         [HttpGet("{id}")]
         [Authorize(Roles = "Manager,User")]
@@ -37,7 +38,19 @@ namespace Emi.Employees.App.Controllers
                 {
                     EmployeeId = id
                 }, cancellationToken);
-            return result.Match(Results.Ok, _ => Results.BadRequest(result.Errors));
+            return result.Match(result.Value.Any() ?  Results.Ok : Results.NotFound, _ => Results.BadRequest(result.Errors));
+        }
+
+        [HttpGet("history/{id}")]
+        [Authorize(Roles = "Manager,User")]
+        public async Task<IResult> GetHistoryById(int id, CancellationToken cancellationToken = default)
+        {
+            var result = await sender.Send(
+                new GetPositionHistoryCommand
+                {
+                    EmployeeId = id
+                }, cancellationToken);
+            return result.Match(result.Value.History.Any() ? Results.Ok : Results.NotFound, _ => Results.BadRequest(result.Errors));
         }
 
         [HttpPost]

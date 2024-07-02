@@ -9,8 +9,14 @@ public class EmployeeRequest
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("email")]
+    public required string Email { get; set; }
+
+    [JsonPropertyName("password")]
+    public required string Password { get; set; }
+
     [JsonPropertyName("position")]
-    public required EnumPosition Position { get; set; }
+    public required int PositionId { get; set; }
 
     [JsonPropertyName("salary")]
     public required decimal Salary { get; set; }

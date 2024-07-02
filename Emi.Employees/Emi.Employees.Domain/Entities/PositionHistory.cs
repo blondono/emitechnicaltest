@@ -12,5 +12,6 @@
         public virtual Employee Employee { get; set; }
         public virtual Department Department { get; set; }
         public virtual Project Project { get; set; }
+        public virtual Position Position { get; set; }
     }
 }

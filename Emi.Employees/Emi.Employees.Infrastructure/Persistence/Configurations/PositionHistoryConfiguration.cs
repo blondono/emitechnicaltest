@@ -18,11 +18,11 @@ internal class PositionHistoryConfiguration : IEntityTypeConfiguration<PositionH
         builder.Property(p => p.ProjectId).IsRequired();
         builder.Property(p => p.PositionId).IsRequired();
         builder.Property(p => p.StartDate).IsRequired();
-        builder.Property(p => p.EndDate).IsRequired();
+        builder.Property(p => p.EndDate).IsRequired(false);
 
         builder.HasOne(e => e.Employee).WithMany(e => e.PositionHistories)
             .HasForeignKey(b => b.EmployeeId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
 
         builder.HasOne(e => e.Department).WithMany(e => e.PositionHistories)
@@ -32,6 +32,11 @@ internal class PositionHistoryConfiguration : IEntityTypeConfiguration<PositionH
 
         builder.HasOne(e => e.Project).WithMany(e => e.PositionHistories)
             .HasForeignKey(b => b.ProjectId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+        builder.HasOne(e => e.Position).WithMany(e => e.PositionHistories)
+            .HasForeignKey(b => b.PositionId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

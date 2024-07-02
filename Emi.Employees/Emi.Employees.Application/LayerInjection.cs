@@ -19,7 +19,8 @@ namespace Emi.Employees.Application
         private static void ConfigureAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(
-            typeof(EmployeeProfile) 
+            typeof(EmployeeProfile),
+            typeof(PositionHistoryProfile)
             );
         }
     }
