@@ -58,5 +58,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();
+app.UseMiddleware<LoggingMiddleware>();
 await app.Services.MigrateDatabase();
 app.Run();
